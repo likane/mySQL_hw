@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/likane/mySQL_hw/issues"
   },
-  "homepage": "https://github.com/likane/mySQL_hw#readme"
+  "homepage": "https://github.com/likane/mySQL_hw#readme",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  }
 }
