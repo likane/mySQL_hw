@@ -72,6 +72,7 @@ var startStore = function() {
 				startStore(); // start user over again
 			} else {
 				cartTotal();
+				updateDB();
 			}
 		})
 
@@ -82,6 +83,16 @@ var startStore = function() {
 
 		var updateDB = function() {
 			var newStock = "UPDATE products set ? WHERE ?";
+			connection.query(newStock, [{stock_quantity: (res[0].stock_quantity - answer.orderTotal)}, {item_id: answer.productID}], function(error, dataresponse){
+				if(error){
+					console.log("unable to update DB from purchase");
+				} else {
+
+					console.log("Your purchase has been processed!");
+					displayStock();
+					startStore();
+				}
+			});
 		}
 		
 	});
