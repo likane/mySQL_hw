@@ -27,7 +27,7 @@ var startStore = function() {
 
 	{
 
-		name:"item",
+		name:"amount",
 		type:"input",
 		message:"how many items would you like to purchase?",
 		validade:function(value){
@@ -38,7 +38,18 @@ var startStore = function() {
 		}
 
 	}]).then(function(answer){
-		var userStock = "SELECT stock_quantity, price FROM products WHERE ?"
+		var userStock = "SELECT stock_quantity, price FROM products WHERE ?";
+		connection.query(userStock, 
+		{
+			item_id: answer.productID
+		},
+		function(error,res){
+			if(error){
+
+			} else if (res[0].stock_quantity === 0) {
+				startStore();
+			}
+		})
 		
 	});
 };
