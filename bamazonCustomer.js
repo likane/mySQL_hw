@@ -16,6 +16,24 @@ connection.connect(function(err) {
 	console.log("connected as id " + connection.threadId);
 });
 
+//Display all items before user manipulation
+var displayStock = function() {
+	var query = "SELECT * FROM products";
+
+	connection.query(query, function(err, response){
+		if(err){
+			console.log("Could not display stock");
+		} else {
+			for (var i = 0; i<response.length; i++) {
+				console.log("Item_ID: " + response[i].item_id + "\n Product: " + response[i].product_name + "\n Department: " + response[i].department_name + "\n Price: " + response[i].price + "\n Quantity In Stock: " + response[i].stock_quantity);
+			}
+		}
+	});
+};
+
+
+
+//User chooses product ID and quantity to purchase
 var startStore = function() {
 	inquirer.prompt([
 	{
@@ -27,11 +45,11 @@ var startStore = function() {
 
 	{
 
-		name:"amount",
+		name:"orderTotal",
 		type:"input",
 		message:"how many items would you like to purchase?",
 		validade:function(value){
-			if(isNaN(value)===false){
+			if(isNaN(value)===false){ //check for numerical value
 				return true;
 			}
 				return false;
@@ -47,9 +65,24 @@ var startStore = function() {
 			if(error){
 
 			} else if (res[0].stock_quantity === 0) {
-				startStore();
+				console.log("Out of Stock!");
+				startStore();//start user over again
+			} else if(res[0].stock_quantity < answer.orderTotal){
+				console.log("Insufficient quantity!");
+				startStore(); // start user over again
+			} else {
+				cartTotal();
 			}
 		})
+
+		var cartTotal = function() {
+			var total = ((answer.orderTotal) * (res[0].price));
+			console.log("Your cart total is "+ total + " dollars.");
+		}
+
+		var updateDB = function() {
+			var newStock = "UPDATE products set ? WHERE ?";
+		}
 		
 	});
 };
